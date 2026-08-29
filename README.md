@@ -37,5 +37,7 @@ npm run verify        # 위 전부
 
 ## 배포
 
-GitHub Pages: `https://wbmaker2.github.io/air-compression-rescue-lab/` (WBmaker2 저장소,
-main 브랜치, Pages build_type=workflow). 배포는 로컬 검증 완료 후 사용자의 별도 출시 승인으로만 진행합니다.
+**라이브: https://wbmaker2.github.io/air-compression-rescue-lab/**
+
+GitHub Pages: WBmaker2 저장소, main 브랜치, Pages build_type=workflow.
+출시 증거는 [docs/release-evidence.md](docs/release-evidence.md)에 기록되어 있다.
