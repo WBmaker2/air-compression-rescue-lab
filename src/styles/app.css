@@ -344,6 +344,11 @@ legend {
   stroke-width: 2;
 }
 
+.syringe-figure svg {
+  height: auto;
+  display: block;
+}
+
 .syringe-figure figcaption {
   font-size: 0.92rem;
   color: var(--color-ink-soft);

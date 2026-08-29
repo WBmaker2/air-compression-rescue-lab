@@ -35,7 +35,6 @@ export function SyringeFigure({ state, label }: SyringeFigureProps) {
       <svg
         viewBox="0 0 380 200"
         width="100%"
-        height="auto"
         role="img"
         aria-label={`${label}: 모형 부피 ${state.modelVolume}, 모형 공기 표식 ${state.airMarkerCount}개, 간격 ${state.spacingLevel}, 저항 느낌 ${state.resistanceFeel}`}
       >
