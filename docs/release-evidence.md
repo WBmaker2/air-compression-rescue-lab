@@ -1,7 +1,6 @@
 # 출시 증거 (Release Evidence)
 
-> 작성일: 2026-08-29. 사용자 출시 승인(2026-08-29 "승인")에 따라 배포를 수행했다.
-> HVC 관리자 등록과 정적 갤러리 동기화는 아직 수행하지 않은 별도 단계다.
+> 작성일: 2026-08-29. 사용자 출시 승인(2026-08-29 "승인")에 따라 배포와 HVC 등록을 수행했다.
 
 ## 1. 배포 정보
 
@@ -11,7 +10,8 @@
 | 브랜치 | main |
 | Pages build_type | workflow (`.github/workflows/deploy-pages.yml`) |
 | 배포 URL | https://wbmaker2.github.io/air-compression-rescue-lab/ |
-| 확인 링크 | https://www.vibehong.shop/ (갤러리 동기화는 HVC 등록 후) |
+| HVC 갤러리 등록 | 완료 (2026-08-29) — https://www.vibehong.shop/apps/air-compression-rescue-lab-7cdc3225-e941-4b39-bb38-29e828ed77f0 |
+| 확인 링크 | https://www.vibehong.shop/ |
 
 ## 2. 배포 전 로컬 검증 (`npm run verify` exit 0, 2026-08-29)
 
@@ -37,13 +37,23 @@
 | 콘솔 오류 | PASS — 0건 (SVG height="auto" 오류는 배포 1차 확인에서 발견 → 수정 후 재배포 d036480에서 0건) |
 | HTTP 4xx/5xx | PASS — 0건 |
 
-## 4. 남은 단계
+## 4. HVC 등록 기록 (2026-08-29, 사용자 승인·비밀번호 제공)
+
+| 단계 | 결과 |
+|---|---|
+| 관리자 로그인 (vibehong.shop/admin) | 완료 |
+| 앱 등록 (제목·설명·링크·GitHub·태그 3개·과학·초등 5~6학년·학생·시뮬레이션·학습 과정·메이커 노트, 썸네일 자동 수집) | 완료 — DB 앱 108 → 109 |
+| 수정 사항 동기화 (sync-static-gallery.yml) | 완료 — 상태 완료·결과 성공, DB 109 = 정적 스냅샷 109 |
+| 공개 갤러리 확인 | 완료 — 랜딩 카드 노출, 앱 상세 페이지 HTTP 200 + 앱 링크 확인 |
+
+- 등록에 사용한 임시 자동화 스크립트(비밀번호 포함)와 세션 쿠키는 사용 직후 삭제했다. 저장소에 남기지 않았다.
+- `vibecoding-lab`의 `apps:verify-production-gallery`는 기준값 84개(오래된 로컬 기준)라 현재 109개와 어긋난다. 등록 전에도 108개였으므로 본 등록과 무관한 스크립트 노후화다.
+
+## 5. 남은 단계
 
 1. **교과 검수** — docs/content-review.md 서명 (구현 전 승인 값은 계획 문서 기준, 사람 검수는 별도)
-2. **HVC 관리자 등록** — 공개 앱 확인 완료. 관리자 인증이 필요해 자동 등록 불가 → 등록 필드·절차·썸네일을 docs/hvc-registration.md로 준비 완료 (2026-08-29 사용자 승인 확인). 관리자 로그인 세션 제공 시 대신 수행 가능
-3. **정적 갤러리 동기화** — HVC 등록 + 수정 사항 동기화 버튼 실행 후 https://www.vibehong.shop/ 확인
 
-## 5. 명시적 제외
+## 6. 명시적 제외
 
 - VoiceOver 수동 검증 (계획상 제외 — 실행·완료 보고하지 않음)
 - 학생 응답 저장·점수·순위·다크 모드 (계획상 제외)
