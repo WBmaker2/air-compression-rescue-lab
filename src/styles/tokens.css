@@ -1,0 +1,35 @@
+:root {
+  --color-bg: #f5f8ff;
+  --color-surface: #ffffff;
+  --color-ink: #1e2a3a;
+  --color-ink-soft: #48586e;
+  --color-primary: #1d4ed8;
+  --color-primary-ink: #ffffff;
+  --color-accent: #f59e0b;
+  --color-focus: #1e3a8a;
+  --color-success: #166534;
+  --color-success-bg: #ecfdf5;
+  --color-warn: #92400e;
+  --color-warn-bg: #fffbeb;
+  --color-border: #c7d2e5;
+  --radius: 12px;
+  --font-size-base: 17px;
+  --line-height: 1.65;
+  --touch-target: 44px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-bg);
+}
+
+body {
+  margin: 0;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--color-ink);
+}

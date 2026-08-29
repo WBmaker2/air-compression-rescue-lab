@@ -5,7 +5,7 @@
 
 | 파일명 | 프롬프트 | 생성 모델 | 생성일 | 사용 위치 | 권리 비고 |
 |---|---|---|---|---|---|
-| src/assets/generated/safe-virtual-air-lab.webp | 밝은 가상 과학 연구소 입구 분위기 일러스트. 주사기 기계 장치 실제 조작 지시, 압력계 수치, 안전 장비 사용법, 문자 없음. 부드러운 파란·크림 색조, 어린이 교육용 | (기록 예정) | (기록 예정) | EntranceScreen 상단 배경 | 생성 모델 이용약관 상 상업적 사용 허용 확인 |
+| src/assets/generated/safe-virtual-air-lab.webp | 밝은 가상 과학 연구소 입구 분위기 일러스트. 주사기 기계 장치 실제 조작 지시, 압력계 수치, 안전 장비 사용법, 문자 없음. 부드러운 파란·크림 색조, 어린이 교육용 | Chromium canvas 렌더링(검수된 로컬 SVG 원본 기반, scripts/generate-asset.mjs) | 2026-08-29 | EntranceScreen 상단 이미지 | 프로젝트가 원본 SVG를 소유하며 외부 소스·핫링크 없음 |
 
 ## 검수 규칙
 

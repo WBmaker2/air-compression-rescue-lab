@@ -1,4 +1,4 @@
-import type { AirMission, AirState, AirTransition } from "../domain/types";
+import type { AirMission, AirState } from "../domain/types";
 
 const sealed60: AirState = {
   id: "sealed-60",

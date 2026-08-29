@@ -156,9 +156,7 @@ export function sessionReducer(
         firstDiagnosis: isFirst ? action.diagnosis : record.firstDiagnosis,
         finalDiagnosis: action.diagnosis,
       });
-    }
-
-    case "REVISE_DIAGNOSIS": {
+    }    case "REVISE_DIAGNOSIS": {
       if (state.step !== "REVISE") return state;
       return upsertRecord(state, {
         ...currentRecord(state),
@@ -171,7 +169,7 @@ export function sessionReducer(
       const next = STEP_ORDER[STEP_ORDER.indexOf(state.step) + 1];
       if (!next || !canAdvance(state.step, next)) return state;
       if (state.step === "PREDICT" && currentRecord(state).prediction === null) return state;
-      if (state.step === "COMPARE" && !requireDiagnosis(state) && next === "REPORT") return state;
+      if (state.step === "DIAGNOSE" && !requireDiagnosis(state)) return state;
       return { ...state, step: next, history: [...state.history, `단계 이동: ${state.step} → ${next}`] };
     }
 
