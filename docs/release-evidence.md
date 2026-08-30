@@ -57,3 +57,17 @@
 
 - VoiceOver 수동 검증 (계획상 제외 — 실행·완료 보고하지 않음)
 - 학생 응답 저장·점수·순위·다크 모드 (계획상 제외)
+
+## 7. 리디자인 릴리스 (2026-08-30)
+
+| 항목 | 결과 |
+|---|---|
+| 리디자인 커밋 | `0e36427` — `feat: redesign air compression rescue lab` |
+| CI 보완 커밋 | `e56b998` — Playwright Chromium 설치 단계 추가 |
+| 최종 CI | [33294613035](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613035) — 성공, `npm run verify` 전체 통과 |
+| 최종 Pages 배포 | [33294613032](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613032) — build·deploy 성공 |
+| 공개 주소 | [https://wbmaker2.github.io/air-compression-rescue-lab/](https://wbmaker2.github.io/air-compression-rescue-lab/) |
+| 공개 확인 | HTTP 200, `공기 부피 압축 연구소` 제목, 리디자인 해시 JS/CSS 자산 응답 확인 |
+| HVC | 기존 등록 유지, 이번 리디자인 릴리스에서 등록 데이터 수정 없음 |
+
+첫 리디자인 커밋의 CI는 Playwright 브라우저 미설치로 실패했으며, `e56b998`에서 워크플로를 보완한 뒤 최종 CI가 성공했습니다. Pages 배포는 최종 커밋 기준 성공했습니다.

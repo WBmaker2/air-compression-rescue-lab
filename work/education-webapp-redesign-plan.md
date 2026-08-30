@@ -2,7 +2,7 @@
 
 > 작성일: 2026-08-30 (Asia/Seoul)
 >
-> 현재 상태: **리디자인 구현·자동 검증·브라우저 검증 완료, 사람 검토 대기**. 초기 사전 점검에서 한 차례 중단했지만, 사용자가 `$ui-ux-pro-max`를 명시적으로 호출하고 스킬 전문을 제공하여 2026-08-30에 디자인 시스템 검색·검증·저장을 재개했습니다. 아래 초기 차단 기록은 당시의 사실로 보존합니다.
+> 현재 상태: **리디자인 구현·커밋·푸시·Pages 배포·자동 검증·브라우저 검증 완료, 사람 검토 대기**. 초기 사전 점검에서 한 차례 중단했지만, 사용자가 `$ui-ux-pro-max`를 명시적으로 호출하고 스킬 전문을 제공하여 2026-08-30에 디자인 시스템 검색·검증·저장을 재개했습니다. 아래 초기 차단 기록은 당시의 사실로 보존합니다.
 
 ## 1. 실행 범위와 게이트
 
@@ -229,11 +229,11 @@ git diff --check
 - 주사기 단면·피스톤·표식은 정보성 과학 도식이므로 생성 이미지로 교체하지 않습니다.
 - 원본 파일은 삭제·덮어쓰지 않습니다. 실패 시 import/CSS/HTML 참조를 이전 파일명으로 되돌리고 자산 장부의 상태를 복원합니다.
 - 구현 변경은 별도 커밋 없이 진행되며, 검토 전 `git diff -- <변경 파일>`로 범위를 확인하고 필요 시 변경 파일만 수동 역패치합니다.
-- 커밋·푸시·릴리스·Pages 재배포·HVC 등록/수정은 이 요청 범위에 포함하지 않습니다.
+- 초기 구현 요청 범위에는 커밋·푸시·릴리스·Pages 재배포·HVC 등록/수정이 포함되지 않았으나, 후속 사용자 요청으로 커밋·푸시·Pages 배포를 완료했습니다. HVC 등록/수정은 수행하지 않았습니다.
 
 ## 11. 현재 차단과 재개 조건
 
-초기 차단은 종료되었습니다. 사용자가 `$ui-ux-pro-max`를 명시적으로 활성화했고, 전문을 읽은 뒤 디자인 시스템을 저장했습니다. 구현과 자동·브라우저 검증까지 완료했으며, 교과·물리 화면 검토만 남아 있습니다.
+초기 차단은 종료되었습니다. 사용자가 `$ui-ux-pro-max`를 명시적으로 활성화했고, 전문을 읽은 뒤 디자인 시스템을 저장했습니다. 구현과 자동·브라우저 검증, 커밋·푸시·Pages 배포까지 완료했으며, 교과·물리 화면 검토만 남아 있습니다.
 
 재개 후 순서:
 
@@ -251,3 +251,11 @@ git diff --check
 - 이미지·폰트·외부 요청·저장소·의존성은 추가하지 않았습니다. 기존 생성 장식 자산은 1280px/375px 브라우저 화면에서 역할과 비율을 확인한 뒤 유지했습니다.
 - 개별 `npm run test:e2e`는 7/7 통과했습니다. 마지막 `npm run verify`는 앞선 정적·unit·a11y·줄 수 단계 통과 후 macOS Chromium child launch 권한 오류로 E2E 묶음에서 중단되어, verify 전체 PASS로 표현하지 않습니다.
 - 최종 근거는 `work/education-webapp-redesign-report.md`에 명령별 결과와 사람 검토 대기로 분리해 기록합니다.
+
+## 13. 커밋·푸시·배포 기록
+
+- `0e36427 feat: redesign air compression rescue lab` — 리디자인 구현·테스트·문서.
+- `e56b998 ci: install Playwright browser before verification` — GitHub Actions에서 Chromium을 설치한 뒤 `npm run verify`를 실행하도록 보완.
+- 최종 [CI 실행 33294613035](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613035) — 성공.
+- 최종 [Pages 실행 33294613032](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613032) — build·deploy 성공.
+- 공개 확인 주소: [https://wbmaker2.github.io/air-compression-rescue-lab/](https://wbmaker2.github.io/air-compression-rescue-lab/).

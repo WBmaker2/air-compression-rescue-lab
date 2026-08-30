@@ -204,8 +204,16 @@
 
 최종 자동·브라우저 결과와 공개 범위는 `work/education-webapp-redesign-report.md`에 기록했습니다.
 
-## 9. 다음 실행 순서
+## 9. 커밋·푸시·배포 후 상태
+
+- 리디자인 구현 커밋: `0e36427`.
+- CI Playwright 설치 보완 커밋: `e56b998`.
+- 최종 [GitHub Actions CI](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613035)와 [GitHub Pages 배포](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613032)가 성공했습니다.
+- [공개 Pages 주소](https://wbmaker2.github.io/air-compression-rescue-lab/)에서 HTTP 200, 앱 제목, 해시 자산을 확인했습니다.
+- HVC 등록 데이터는 수정하지 않았습니다.
+
+## 10. 다음 실행 순서
 
 1. 교과 검수자에게 `docs/content-review.md`의 밀폐·열림·누출·판단 보류 문구를 확인받습니다.
 2. 실제 태블릿·물리 화면과 브라우저 200% 확대에서 읽기 순서를 확인합니다.
-3. 배포를 원할 때만 별도 승인 후 Pages 공개 경로와 HVC 등록 상태를 다시 검증합니다.
+3. 공개 Pages 경로는 확인 완료했으므로, 다음은 교과 검수와 실제 태블릿·물리 화면·200% 확대 검토입니다.

@@ -2,7 +2,7 @@
 
 > 보고일: 2026-08-30 (Asia/Seoul)
 >
-> 상태: **implementation complete — 자동·브라우저 검증 완료, 사람 검토 대기**
+> 상태: **implementation complete — 커밋·푸시·Pages 배포·자동·브라우저 검증 완료, 사람 검토 대기**
 
 ## 사전 작업과 디자인 게이트
 
@@ -13,7 +13,7 @@
 - `work/education-webapp-redesign-plan.md` 작성
 - `work/education-webapp-redesign-audit.md` 작성
 - `work/education-webapp-redesign-assets.md` 작성
-- 기존 코드 변경 없음, 이미지 생성 없음, 의존성 설치 없음, 커밋/푸시/배포/HVC 작업 없음
+- 기준선 시점에는 기존 코드 변경 없음, 이미지 생성 없음, 의존성 설치 없음, 커밋/푸시/배포/HVC 작업 없음
 - 초기 중단 뒤 사용자가 `$ui-ux-pro-max`를 명시적으로 활성화하고 전문을 제공함
 - `design-system/air-compression-rescue-lab/MASTER.md` 생성·검토 완료; 어두운 HUD 기본값은 라이트 교육용 프로젝트 오버라이드로 조정함
 
@@ -73,6 +73,8 @@
 | `npm run check:lines` | PASS — TS/TSX/CSS 500줄 이상 없음 |
 | `npm run test:e2e` | PASS — Chromium 7 tests; 4217 전용 preview |
 | `npm run verify` | PARTIAL — lint/typecheck/build/test/a11y/check-lines 통과 후 Chromium headless child launch가 macOS `MachPortRendezvous` 권한 오류로 종료; 개별 `npm run test:e2e` 7/7 통과 증거는 별도 확보 |
+| GitHub Actions CI | PASS — [run 33294613035](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613035), `npm run verify` 전체 통과 |
+| GitHub Pages 배포 | PASS — [run 33294613032](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613032), build·deploy 성공 |
 | 브라우저 확인 | PASS — 1280×800 입구, 375×812 모바일 입구/단계 흐름, 업데이트 내역 열기·Escape·focus 복원, console error 0건, 동적 network request 0건 |
 | `$impeccable` detector | DEGRADED — parser 모듈 부재로 regex fallback; 최종 출력은 의도적인 notebook grid advisory 1건이며 clean bill로 표현하지 않음 |
 | VoiceOver | 수행·보고하지 않음 — 프로젝트 계약상 제외 |
@@ -82,7 +84,9 @@
 ## 확인 링크와 공개 범위
 
 - 로컬 검토 주소: `http://127.0.0.1:4217/air-compression-rescue-lab/` (검증용 preview)
-- 기존 GitHub Pages 경로: [air-compression-rescue-lab](https://wbmaker2.github.io/air-compression-rescue-lab/) — 이번 요청에서는 배포하지 않았으므로 공개 화면의 리디자인 반영 여부는 별도 배포 후 확인해야 합니다.
+- GitHub Pages 공개 주소: [air-compression-rescue-lab](https://wbmaker2.github.io/air-compression-rescue-lab/) — `e56b998` 기준 Pages 배포 성공, HTTP 200·제목·해시 자산을 공개 HTML에서 확인했습니다.
+- 커밋·CI: `0e36427` 리디자인 구현, `e56b998` Playwright 설치 보완; [최종 CI 실행](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613035)
+- Pages 배포: [최종 Pages 실행](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33294613032)
 - HVC 확인 경로: [HVC 앱 등록](https://www.vibehong.shop/apps/air-compression-rescue-lab-7cdc3225-e941-4b39-bb38-29e828ed77f0) — 기존 등록 경로이며 이번 요청에서 HVC 데이터는 수정하지 않았습니다.
 
-커밋·푸시·Pages 재배포·HVC 등록/수정은 사용자 요청 범위가 아니어서 실행하지 않았습니다.
+커밋·푸시·Pages 배포는 사용자 요청에 따라 완료했습니다. HVC 등록·수정은 실행하지 않았습니다.
