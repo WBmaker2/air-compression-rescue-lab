@@ -1,21 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type RefObject } from "react";
 import { ActionButton } from "../../components/ActionButton";
 import { ModalDialog } from "../../components/ModalDialog";
-import { SyringeFigure } from "./SyringeFigure";
-import { FeedbackPanel } from "./FeedbackPanel";
+import { StepHeader } from "../../components/StepHeader";
 import {
-  compareAirStates,
-  evaluateDiagnosis,
-  simulateAirCase,
-} from "../../domain/airModel";
-import {
-  DECISION_LABELS,
-  OBSERVATION_LABELS,
-  SEAL_LABELS,
-} from "../../content/missions";
-import type { AirDecision, AirMission, SealState } from "../../domain/types";
-import type { SessionStep } from "../../domain/types";
+  labelForComparison,
+  labelForDecision,
+  labelForLevel,
+  labelForObservation,
+  labelForSeal,
+} from "../../content/labels";
+import { evaluateDiagnosis, compareAirStates, simulateAirCase } from "../../domain/airModel";
+import type { AirDecision, AirMission, SealState, SessionStep } from "../../domain/types";
 import type { MissionRecord, SessionAction } from "../../app/sessionReducer";
+import { FeedbackPanel } from "./FeedbackPanel";
+import { SyringeFigure } from "./SyringeFigure";
 
 const PREDICTION_OPTIONS: readonly AirDecision[] = [
   "compressed",
@@ -26,17 +24,12 @@ const PREDICTION_OPTIONS: readonly AirDecision[] = [
 
 const DIAGNOSIS_SEALS: readonly SealState[] = ["sealed", "open", "leaking"];
 
-const LEVEL_LABELS: Readonly<Record<string, string>> = {
-  low: "낮음",
-  medium: "중간",
-  high: "높음",
-};
-
 interface SyringeWorkbenchProps {
   readonly mission: AirMission;
   readonly missionIndex: number;
   readonly step: SessionStep;
   readonly record: MissionRecord;
+  readonly headingRef: RefObject<HTMLHeadingElement>;
   readonly dispatch: (action: SessionAction) => void;
 }
 
@@ -45,11 +38,10 @@ export function SyringeWorkbench({
   missionIndex,
   step,
   record,
+  headingRef,
   dispatch,
 }: SyringeWorkbenchProps) {
-  const [runResult, setRunResult] = useState<
-    ReturnType<typeof simulateAirCase> | "no-run" | null
-  >(null);
+  const [runResult, setRunResult] = useState<ReturnType<typeof simulateAirCase> | "no-run" | null>(null);
   const [evidence, setEvidence] = useState<readonly string[]>([]);
   const [diagnosis, setDiagnosis] = useState<AirDecision | SealState | null>(null);
   const [confirmRestart, setConfirmRestart] = useState(false);
@@ -58,6 +50,7 @@ export function SyringeWorkbench({
     setRunResult(null);
     setEvidence([]);
     setDiagnosis(record.finalDiagnosis ?? null);
+    // 미션이 바뀔 때만 로컬 실행 결과를 비운다. 단계 뒤로 가기는 기록을 보존한다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mission.id]);
 
@@ -66,8 +59,7 @@ export function SyringeWorkbench({
   const observationKeys = useMemo(() => {
     if (runResult && runResult !== "no-run") return runResult.evaluation.observationKeys;
     if (runResult === "no-run") return ["obs.not-enough-information"];
-    if (isDiagnoseMission)
-      return mission.observationSignatures?.[0]?.observationKeys ?? [];
+    if (isDiagnoseMission) return mission.observationSignatures?.[0]?.observationKeys ?? [];
     return [];
   }, [runResult, isDiagnoseMission, mission.observationSignatures]);
 
@@ -77,42 +69,47 @@ export function SyringeWorkbench({
     return mission.expectedDecisions.includes(choice as AirDecision);
   };
 
+  const back = () => dispatch({ type: "BACK" });
+
   if (step === "OBSERVE") {
     return (
-      <section aria-labelledby="step-heading">
-        <h2 id="step-heading">
-          조건 관찰 — 미션 {missionIndex + 1}: {mission.title}
-        </h2>
+      <section className="workbench-step" aria-labelledby="step-heading">
+        <StepHeader
+          eyebrow={`미션 ${missionIndex + 1} · 첫 번째 기록`}
+          title={`조건 관찰 — 미션 ${missionIndex + 1}: ${mission.title}`}
+          headingRef={headingRef}
+        />
         <p className="misconception-guard">
-          <strong>생각 점검:</strong> {mission.misconceptionGuard}
+          <strong>생각 점검</strong> {mission.misconceptionGuard}
         </p>
-        <p>{mission.scene}</p>
-        <table className="condition-table">
-          <caption>조건 요약 (모형 값)</caption>
-          <thead>
-            <tr>
-              <th scope="col">끝 상태</th>
-              <th scope="col">모형 부피</th>
-              <th scope="col">모형 공기 표식</th>
-              <th scope="col">간격</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                {fromState.sealState === "sealed"
-                  ? "밀폐"
-                  : fromState.sealState === "open"
-                    ? "열림"
-                    : "누출 가능"}
-              </td>
-              <td>{fromState.modelVolume}</td>
-              <td>{fromState.airMarkerCount}개</td>
-              <td>{LEVEL_LABELS[fromState.spacingLevel]}</td>
-            </tr>
-          </tbody>
-        </table>
-        <SyringeFigure state={fromState} label="시작 상태" />
+        <p className="step-lede">{mission.scene}</p>
+        <div className="step-split observation-split">
+          <div className="data-card">
+            <p className="data-card__label">시작 상태 · 모형 값</p>
+            <table className="condition-table">
+              <caption>조건 요약 (모형 값)</caption>
+              <tbody>
+                <tr>
+                  <th scope="row">끝 상태</th>
+                  <td>{labelForSeal(fromState.sealState)}</td>
+                </tr>
+                <tr>
+                  <th scope="row">모형 부피</th>
+                  <td>{fromState.modelVolume}</td>
+                </tr>
+                <tr>
+                  <th scope="row">모형 공기 표식</th>
+                  <td>{fromState.airMarkerCount}개</td>
+                </tr>
+                <tr>
+                  <th scope="row">표식 간격</th>
+                  <td>{labelForLevel(fromState.spacingLevel)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <SyringeFigure state={fromState} label="시작 상태" />
+        </div>
         <div className="step-actions">
           <ActionButton pulse onClick={() => dispatch({ type: "NEXT_STEP" })}>
             조건을 확인했어요, 예측하기
@@ -124,10 +121,10 @@ export function SyringeWorkbench({
 
   if (step === "PREDICT") {
     return (
-      <section aria-labelledby="step-heading">
-        <h2 id="step-heading">예측판 — 먼저 생각해 보기</h2>
-        <p>{mission.task}</p>
-        <fieldset>
+      <section className="workbench-step" aria-labelledby="step-heading">
+        <StepHeader eyebrow="두 번째 기록 · 실행 전" title="예측판 — 먼저 생각해 보기" headingRef={headingRef} onBack={back} />
+        <p className="step-lede">{mission.task}</p>
+        <fieldset className="choice-list">
           <legend>피스톤을 움직인 뒤 어떤 일이 일어날 것 같나요?</legend>
           {PREDICTION_OPTIONS.map((option) => (
             <label key={option} className="choice">
@@ -138,20 +135,14 @@ export function SyringeWorkbench({
                 onChange={() => dispatch({ type: "SET_PREDICTION", decision: option })}
               />
               <span className="choice-text">
-                {record.prediction === option ? (
-                  <strong>
-                    ✓ 선택됨 — {DECISION_LABELS[option]}
-                  </strong>
-                ) : (
-                  DECISION_LABELS[option]
-                )}
+                {record.prediction === option ? <strong>선택됨 · {labelForDecision(option)}</strong> : labelForDecision(option)}
               </span>
             </label>
           ))}
         </fieldset>
         <div className="step-actions">
           <ActionButton
-            pulse
+            pulse={record.prediction !== null}
             disabled={record.prediction === null}
             onClick={() => dispatch({ type: "NEXT_STEP" })}
           >
@@ -164,23 +155,27 @@ export function SyringeWorkbench({
 
   if (step === "RUN") {
     const transition = mission.transitions[0];
-    const actionLabel =
-      transition?.action === "pull" ? "피스톤 당기기" : "피스톤 누르기";
+    const actionLabel = transition?.action === "pull" ? "피스톤 당기기" : "피스톤 누르기";
     return (
-      <section aria-labelledby="step-heading">
-        <h2 id="step-heading">가상 실행 — 한 단계만 움직여요</h2>
-        <SyringeFigure state={fromState} label="실행 전" />
-        {transition ? (
-          <p>
-            예측한 행동: <strong>{actionLabel}</strong> ({fromState.modelVolume} →{" "}
-            {mission.states.find((s) => s.id === transition.toStateId)?.modelVolume})
-          </p>
-        ) : (
-          <p>
-            이 미션에는 확정된 결과 상태가 제공되지 않아요. 그래서 이 화면에서는 실행 결과를
-            확정하지 않고, 관찰 기록을 확인하는 것으로 넘어가요.
-          </p>
-        )}
+      <section className="workbench-step" aria-labelledby="step-heading">
+        <StepHeader eyebrow="세 번째 기록 · 한 단계 실행" title="가상 실행 — 한 단계만 움직여요" headingRef={headingRef} onBack={back} />
+        <div className="run-layout">
+          <SyringeFigure state={fromState} label="실행 전" />
+          <div className="run-copy">
+            <p className="data-card__label">가상 행동</p>
+            {transition ? (
+              <p>
+                예측한 행동은 <strong>{actionLabel}</strong>이에요. 모형 부피가 {fromState.modelVolume}에서{" "}
+                {mission.states.find((state) => state.id === transition.toStateId)?.modelVolume}으로 바뀌는 한 단계만 실행해요.
+              </p>
+            ) : (
+              <p>
+                확정된 결과 상태가 제공되지 않아요. 실행 결과를 만들어 내지 않고, 관찰 기록을 확인하는 것으로 넘어가요.
+              </p>
+            )}
+            <p className="model-note">실제 주사기를 움직이는 안내가 아니라, 검수된 가상 모형의 전이만 보여 줍니다.</p>
+          </div>
+        </div>
         <div className="step-actions">
           {transition ? (
             <ActionButton
@@ -193,10 +188,13 @@ export function SyringeWorkbench({
               가상 실험 실행
             </ActionButton>
           ) : (
-            <ActionButton pulse onClick={() => {
-              setRunResult("no-run");
-              dispatch({ type: "NEXT_STEP" });
-            }}>
+            <ActionButton
+              pulse
+              onClick={() => {
+                setRunResult("no-run");
+                dispatch({ type: "NEXT_STEP" });
+              }}
+            >
               관찰 결과 확인
             </ActionButton>
           )}
@@ -207,58 +205,55 @@ export function SyringeWorkbench({
 
   if (step === "COMPARE") {
     const before = runResult && runResult !== "no-run" ? runResult.from : fromState;
-    const after =
-      runResult && runResult !== "no-run"
-        ? runResult.to
-        : isDiagnoseMission
-          ? null
-          : fromState;
-    const compareKeys =
-      runResult && runResult !== "no-run" ? compareAirStates(before, after!) : [];
+    const after = runResult && runResult !== "no-run" ? runResult.to : isDiagnoseMission ? null : fromState;
+    const compareKeys = runResult && runResult !== "no-run" && after ? compareAirStates(before, after) : [];
+
     return (
-      <section aria-labelledby="step-heading">
-        <h2 id="step-heading">비교판 — 전과 후를 같은 표에서</h2>
+      <section className="workbench-step" aria-labelledby="step-heading">
+        <StepHeader eyebrow="네 번째 기록 · 변화 찾기" title="비교판 — 전과 후를 같은 기준으로" headingRef={headingRef} onBack={back} />
         {runResult && runResult !== "no-run" ? (
-          <>
-            <table className="compare-table">
-              <caption>전후 비교 (모형 값)</caption>
-              <thead>
-                <tr>
-                  <th scope="col">항목</th>
-                  <th scope="col">실행 전</th>
-                  <th scope="col">실행 후</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">모형 부피</th>
-                  <td>{before.modelVolume}</td>
-                  <td>{after?.modelVolume}</td>
-                </tr>
-                <tr>
-                  <th scope="row">모형 공기 표식</th>
-                  <td>{before.airMarkerCount}개</td>
-                  <td>{after?.airMarkerCount}개</td>
-                </tr>
-                <tr>
-                  <th scope="row">간격</th>
-                  <td>{LEVEL_LABELS[before.spacingLevel]}</td>
-                  <td>{LEVEL_LABELS[after?.spacingLevel ?? "medium"]}</td>
-                </tr>
-                <tr>
-                  <th scope="row">저항 느낌</th>
-                  <td>{LEVEL_LABELS[before.resistanceFeel]}</td>
-                  <td>{LEVEL_LABELS[after?.resistanceFeel ?? "medium"]}</td>
-                </tr>
-              </tbody>
-            </table>
-            <ul className="compare-keys">
-              {compareKeys.map((key) => (
-                <li key={key}>{OBSERVATION_LABELS[key.replace("compare.", "obs.")] ?? key}</li>
-              ))}
-            </ul>
+          <div className="step-split compare-split">
+            <div>
+              <table className="compare-table">
+                <caption>전후 비교 (모형 값)</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">항목</th>
+                    <th scope="col">실행 전</th>
+                    <th scope="col">실행 후</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">모형 부피</th>
+                    <td>{before.modelVolume}</td>
+                    <td>{after?.modelVolume}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">모형 공기 표식</th>
+                    <td>{before.airMarkerCount}개</td>
+                    <td>{after?.airMarkerCount}개</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">표식 간격</th>
+                    <td>{labelForLevel(before.spacingLevel)}</td>
+                    <td>{labelForLevel(after?.spacingLevel ?? "medium")}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">저항 느낌</th>
+                    <td>{labelForLevel(before.resistanceFeel)}</td>
+                    <td>{labelForLevel(after?.resistanceFeel ?? "medium")}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <ul className="compare-keys" aria-label="찾은 변화">
+                {compareKeys.map((key) => (
+                  <li key={key}>{labelForComparison(key)}</li>
+                ))}
+              </ul>
+            </div>
             <SyringeFigure state={after!} label="실행 후" />
-          </>
+          </div>
         ) : isDiagnoseMission ? (
           <table className="compare-table">
             <caption>가상 펌프의 세 번의 관찰 기록 (모형 값)</caption>
@@ -266,39 +261,28 @@ export function SyringeWorkbench({
               <tr>
                 <th scope="col">관찰</th>
                 <th scope="col">모형 부피</th>
-                <th scope="col">모형 공기 표식</th>
+                <th scope="col">공기 표식</th>
                 <th scope="col">저항 느낌</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">관찰 1</th>
-                <td>60</td>
-                <td>12개</td>
-                <td>낮음</td>
-              </tr>
-              <tr>
-                <th scope="row">관찰 2</th>
-                <td>40</td>
-                <td>10개</td>
-                <td>낮음</td>
-              </tr>
-              <tr>
-                <th scope="row">관찰 3</th>
-                <td>20</td>
-                <td>8개</td>
-                <td>중간</td>
-              </tr>
+              {[ ["관찰 1", "60", "12개", "낮음"], ["관찰 2", "40", "10개", "낮음"], ["관찰 3", "20", "8개", "중간"] ].map(([observation, volume, markers, resistance]) => (
+                <tr key={observation}>
+                  <th scope="row">{observation}</th>
+                  <td>{volume}</td>
+                  <td>{markers}</td>
+                  <td>{resistance}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         ) : (
-          <p>
-            확정된 실행 결과가 없어요. 이유: 누출률과 결과 상태 정보가 제공되지 않았어요.
-            정보가 부족할 때는 판단을 보류하는 것이 과학적인 태도예요.
+          <p className="empty-state">
+            확정된 실행 결과가 없어요. 누출률과 결과 상태 정보가 제공되지 않았기 때문에 판단을 보류하는 것이 과학적인 태도예요.
           </p>
         )}
 
-        <fieldset>
+        <fieldset className="choice-list evidence-list">
           <legend>어떤 근거를 확인했나요? (하나 이상)</legend>
           {observationKeys.map((key) => (
             <label key={key} className="choice">
@@ -307,19 +291,17 @@ export function SyringeWorkbench({
                 checked={evidence.includes(key)}
                 onChange={(event) =>
                   setEvidence(
-                    event.target.checked
-                      ? [...evidence, key]
-                      : evidence.filter((candidate) => candidate !== key)
+                    event.target.checked ? [...evidence, key] : evidence.filter((candidate) => candidate !== key)
                   )
                 }
               />
-              <span className="choice-text">{OBSERVATION_LABELS[key] ?? key}</span>
+              <span className="choice-text">{labelForObservation(key)}</span>
             </label>
           ))}
         </fieldset>
         <div className="step-actions">
           <ActionButton
-            pulse
+            pulse={evidence.length > 0}
             disabled={evidence.length === 0}
             onClick={() => {
               dispatch({ type: "SET_EVIDENCE", keys: evidence });
@@ -336,25 +318,46 @@ export function SyringeWorkbench({
   if (step === "DIAGNOSE" || step === "REVISE") {
     const revising = step === "REVISE";
     const chosen = diagnosis;
-    const accepted = chosen !== null ? evaluateChoice(chosen) : null;
-    const firstWasWrong =
-      record.firstDiagnosis !== null && !evaluateChoice(record.firstDiagnosis);
-    const options: readonly (AirDecision | SealState)[] = isDiagnoseMission
-      ? DIAGNOSIS_SEALS
-      : PREDICTION_OPTIONS;
+    const diagnosisEvaluation = chosen === null
+      ? null
+      : isDiagnoseMission
+        ? evaluateDiagnosis(mission, chosen as SealState)
+        : {
+            correct: evaluateChoice(chosen),
+            evidenceKeys: runResult && runResult !== "no-run" ? runResult.evaluation.evidenceKeys : [],
+          };
+    const accepted = diagnosisEvaluation?.correct ?? false;
+    const firstWasWrong = record.firstDiagnosis !== null && !evaluateChoice(record.firstDiagnosis);
+    const options: readonly (AirDecision | SealState)[] = isDiagnoseMission ? DIAGNOSIS_SEALS : PREDICTION_OPTIONS;
     const optionLabel = (option: AirDecision | SealState) =>
-      isDiagnoseMission ? SEAL_LABELS[option] : DECISION_LABELS[option];
+      isDiagnoseMission ? labelForSeal(option) : labelForDecision(option);
 
     return (
-      <section aria-labelledby="step-heading">
-        <h2 id="step-heading">{revising ? "규칙 수정 — 한 번 다시 볼까요?" : "진단판"}</h2>
+      <section className="workbench-step" aria-labelledby="step-heading">
+        <StepHeader
+          eyebrow={
+            revising
+              ? firstWasWrong
+                ? "여섯 번째 기록 · 다시 보기"
+                : "여섯 번째 기록 · 판단 확인"
+              : "다섯 번째 기록 · 결론 세우기"
+          }
+          title={
+            revising
+              ? firstWasWrong
+                ? "규칙 수정 — 한 번 다시 볼까요?"
+                : "검토판 — 판단을 기록하기 전에"
+              : "진단판 — 관찰로 설명하기"
+          }
+          headingRef={headingRef}
+          onBack={back}
+        />
         {revising && firstWasWrong ? (
-          <p>
-            처음 판단이 관찰 근거와 맞지 않아요. 근거를 다시 읽고 한 번 수정할 수 있어요.
-            (정답을 대신 알려 주지는 않아요. 관찰이 힌트예요.)
+          <p className="misconception-guard">
+            처음 판단이 관찰 근거와 맞지 않아요. 근거를 다시 읽고 한 번 수정할 수 있어요. 정답을 대신 알려 주지는 않아요.
           </p>
         ) : null}
-        <fieldset>
+        <fieldset className="choice-list">
           <legend>{revising ? "수정한 판단 고르기" : "관찰 근거와 맞는 결론 고르기"}</legend>
           {options.map((option) => (
             <label key={option} className="choice">
@@ -367,27 +370,31 @@ export function SyringeWorkbench({
                   dispatch({ type: revising ? "REVISE_DIAGNOSIS" : "SET_DIAGNOSIS", diagnosis: option });
                 }}
               />
-              <span className="choice-text">
-                {chosen === option ? <strong>✓ 선택됨 — {optionLabel(option)}</strong> : optionLabel(option)}
-              </span>
+              <span className="choice-text">{chosen === option ? <strong>선택됨 · {optionLabel(option)}</strong> : optionLabel(option)}</span>
             </label>
           ))}
         </fieldset>
-        {accepted !== null ? (
+        {diagnosisEvaluation ? (
           <FeedbackPanel
             accepted={accepted}
             decision={String(chosen)}
             observationKeys={observationKeys}
-            revised={revising || (record.revised && accepted)}
+            evidenceKeys={diagnosisEvaluation.evidenceKeys}
+            revised={record.revised && accepted === true}
           />
         ) : null}
         <div className="step-actions">
           {!revising ? (
-            <ActionButton disabled={chosen === null} onClick={() => dispatch({ type: "NEXT_STEP" })}>
+            <ActionButton
+              pulse={chosen !== null}
+              disabled={chosen === null}
+              onClick={() => dispatch({ type: "NEXT_STEP" })}
+            >
               {accepted ? "판단을 골랐어요, 기록으로" : "판단을 골랐어요, 검토하기"}
             </ActionButton>
           ) : (
             <ActionButton
+              pulse={chosen !== null && (record.revised || accepted === true)}
               disabled={chosen === null || !(record.revised || accepted === true)}
               onClick={() => dispatch({ type: "NEXT_STEP" })}
             >
@@ -395,19 +402,13 @@ export function SyringeWorkbench({
             </ActionButton>
           )}
         </div>
-        <div className="step-actions">
+        <div className="secondary-actions">
           <ActionButton variant="secondary" onClick={() => setConfirmRestart(true)}>
             처음부터 다시 하기
           </ActionButton>
         </div>
-        <ModalDialog
-          open={confirmRestart}
-          title="처음부터 다시 하기"
-          onClose={() => setConfirmRestart(false)}
-        >
-          <p>
-            지금까지의 응답은 저장되지 않아요. 처음부터 다시 하면 모든 기록이 사라져요. 계속할까요?
-          </p>
+        <ModalDialog open={confirmRestart} title="처음부터 다시 하기" onClose={() => setConfirmRestart(false)}>
+          <p>지금까지의 응답은 저장되지 않아요. 처음부터 다시 하면 모든 기록이 사라져요. 계속할까요?</p>
           <div className="step-actions">
             <ActionButton
               variant="danger"
@@ -427,25 +428,24 @@ export function SyringeWorkbench({
     );
   }
 
-  // REPORT (미션 단위)
   return (
-    <section aria-labelledby="step-heading">
-      <h2 id="step-heading">
-        미션 {missionIndex + 1} 기록 — {mission.title}
-      </h2>
-      <table className="compare-table">
+    <section className="workbench-step" aria-labelledby="step-heading">
+      <StepHeader eyebrow={`미션 ${missionIndex + 1} · 마지막 기록`} title={`미션 ${missionIndex + 1} 기록 — ${mission.title}`} headingRef={headingRef} onBack={back} />
+      <div className="record-summary">
+        <p className="data-card__label">이번 미션에서 남긴 흐름</p>
+        <p>첫 생각에서 근거 확인, 최종 판단까지의 과정을 한눈에 살펴보세요.</p>
+      </div>
+      <table className="compare-table record-table">
         <caption>나의 판단 기록</caption>
         <tbody>
           <tr>
             <th scope="row">최초 예측</th>
-            <td>{record.prediction ? DECISION_LABELS[record.prediction] : "없음"}</td>
+            <td>{record.prediction ? labelForDecision(record.prediction) : "없음"}</td>
           </tr>
           <tr>
             <th scope="row">사용한 근거</th>
             <td>
-              {record.evidenceKeys.length > 0
-                ? record.evidenceKeys.map((key) => OBSERVATION_LABELS[key] ?? key).join(", ")
-                : "없음"}
+              {record.evidenceKeys.length > 0 ? record.evidenceKeys.map(labelForObservation).join(", ") : "없음"}
             </td>
           </tr>
           <tr>
@@ -453,8 +453,8 @@ export function SyringeWorkbench({
             <td>
               {record.finalDiagnosis
                 ? isDiagnoseMission
-                  ? SEAL_LABELS[record.finalDiagnosis]
-                  : DECISION_LABELS[record.finalDiagnosis]
+                  ? labelForSeal(String(record.finalDiagnosis))
+                  : labelForDecision(String(record.finalDiagnosis))
                 : "없음"}
             </td>
           </tr>

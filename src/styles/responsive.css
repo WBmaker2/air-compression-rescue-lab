@@ -1,0 +1,158 @@
+@media (max-width: 780px) {
+  .entrance-hero,
+  .step-split,
+  .run-layout,
+  .compare-split,
+  .mission-library-header,
+  .decision-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .entrance-title {
+    max-inline-size: 12ch;
+  }
+
+  .entrance-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .app-header__inner {
+    min-height: 68px;
+  }
+
+  .app-main {
+    padding-top: 20px;
+  }
+
+  .app-header__inner,
+  .app-main,
+  .app-footer {
+    width: min(100% - 24px, var(--content-max));
+  }
+
+  .app-title {
+    font-size: 0.96rem;
+  }
+
+  .update-history-button {
+    padding-inline: 9px;
+    font-size: 0.78rem;
+  }
+
+  .workbench-step,
+  .learning-report {
+    padding: 18px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .entrance {
+    gap: 28px;
+  }
+
+  .entrance-facts,
+  .entrance-missions,
+  .entrance-decisions {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-steps {
+    padding: 12px;
+  }
+
+  .progress-steps ol {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .progress-step {
+    padding-inline: 5px;
+    font-size: 0.72rem;
+  }
+
+  .step-header {
+    align-items: flex-start;
+  }
+
+  .step-title {
+    font-size: clamp(1.7rem, 9vw, 2.4rem);
+  }
+
+  .back-button {
+    padding-inline: 7px;
+    font-size: 0.84rem;
+  }
+
+  .step-actions,
+  .secondary-actions,
+  .entrance-actions {
+    align-items: stretch;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+
+  .condition-table,
+  .compare-table,
+  .report-table {
+    font-size: 0.78rem;
+  }
+
+  .condition-table th,
+  .condition-table td,
+  .compare-table th,
+  .compare-table td,
+  .report-table th,
+  .report-table td {
+    padding: 7px 5px;
+  }
+
+  .report-table th:nth-child(1),
+  .report-table th:nth-child(3) {
+    width: auto;
+  }
+
+  .choice-list {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 390px) {
+  .app-brand {
+    gap: 7px;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .app-kicker {
+    font-size: 0.65rem;
+  }
+
+  .app-title {
+    font-size: 0.88rem;
+  }
+
+  .update-history-button {
+    max-width: 92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .progress-steps ol {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .step-header {
+    display: grid;
+    gap: 10px;
+  }
+
+  .back-button {
+    justify-self: start;
+  }
+}

@@ -1,21 +1,36 @@
+import type { RefObject } from "react";
 import { ActionButton } from "../../components/ActionButton";
-import { DECISION_LABELS, MISSIONS, OBSERVATION_LABELS, SEAL_LABELS } from "../../content/missions";
+import { MISSIONS } from "../../content/missions";
+import { labelForDecision, labelForObservation, labelForSeal } from "../../content/labels";
 import type { MissionRecord } from "../../app/sessionReducer";
 import "./print.css";
 
 interface LearningReportProps {
   readonly records: readonly MissionRecord[];
+  readonly headingRef: RefObject<HTMLHeadingElement>;
   readonly onRestartRequest: () => void;
 }
 
-export function LearningReport({ records, onRestartRequest }: LearningReportProps) {
+export function LearningReport({ records, headingRef, onRestartRequest }: LearningReportProps) {
   return (
     <section aria-labelledby="report-heading" className="learning-report">
-      <h2 id="report-heading">실험 기록 전체 보기</h2>
-      <p>
-        점수나 순위 없이, 최초 판단 → 사용한 근거 → 최종 결과의 흐름만 기록해요. 이 기록은
-        저장되지 않으니 인쇄하거나 지금 화면에서 함께 보세요.
+      <div className="step-header">
+        <div className="step-heading-copy">
+          <p className="step-eyebrow">활동 완료 · 전체 기록</p>
+          <h1 id="report-heading" ref={headingRef} tabIndex={-1} className="step-title">
+            실험 기록 전체 보기
+          </h1>
+        </div>
+      </div>
+      <p className="report-lede">
+        점수나 순위 없이 첫 생각 → 사용한 근거 → 최종 결과의 흐름만 남겼어요. 저장되지 않으니
+        인쇄하거나 지금 화면에서 함께 살펴보세요.
       </p>
+      <div className="report-summary" aria-label="기록 읽는 순서">
+        <span><strong>01</strong> 처음 생각</span>
+        <span><strong>02</strong> 확인한 근거</span>
+        <span><strong>03</strong> 최종 판단</span>
+      </div>
       <table className="compare-table report-table">
         <caption>미션별 판단 기록 (모형 값)</caption>
         <thead>
@@ -36,17 +51,17 @@ export function LearningReport({ records, onRestartRequest }: LearningReportProp
                 <th scope="row">
                   {index + 1}. {mission.title}
                 </th>
-                <td>{record?.prediction ? DECISION_LABELS[record.prediction] : "—"}</td>
+                <td>{record?.prediction ? labelForDecision(record.prediction) : "—"}</td>
                 <td>
                   {record && record.evidenceKeys.length > 0
-                    ? record.evidenceKeys.map((key) => OBSERVATION_LABELS[key] ?? key).join(", ")
+                    ? record.evidenceKeys.map(labelForObservation).join(", ")
                     : "—"}
                 </td>
                 <td>
                   {record?.finalDiagnosis
                     ? isDiagnoseMission
-                      ? SEAL_LABELS[record.finalDiagnosis]
-                      : DECISION_LABELS[record.finalDiagnosis]
+                      ? labelForSeal(String(record.finalDiagnosis))
+                      : labelForDecision(String(record.finalDiagnosis))
                     : "—"}
                 </td>
                 <td>{record?.revised ? "수정함" : "수정 없음"}</td>

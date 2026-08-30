@@ -17,6 +17,14 @@ async function beginObservation(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe("App — 입구", () => {
+  it("본문 건너뛰기 링크가 실제 main을 가리킨다", () => {
+    render(<App />);
+    expect(screen.getByRole("link", { name: "본문으로 건너뛰기" })).toHaveAttribute(
+      "href",
+      "#main-content"
+    );
+  });
+
   it("학습 목표, 6개 미션, 새로고침 경고, 업데이트 내역을 보여 준다", () => {
     render(<App />);
     expect(screen.getByText(/오늘의 목표/)).toBeInTheDocument();
@@ -47,6 +55,14 @@ describe("App — 입구", () => {
     expect(screen.getByRole("heading", { name: /조건 관찰/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1 })).toHaveFocus();
   });
+
+  it("예측 단계에서 이전 단계로 돌아갈 수 있다", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await startFirstMission(user);
+    await user.click(screen.getByRole("button", { name: "이전 단계" }));
+    expect(screen.getByRole("heading", { name: /조건 관찰/ })).toBeInTheDocument();
+  });
 });
 
 describe("App — 첫 미션 전체 흐름 (air-sealed-01)", () => {
@@ -67,7 +83,10 @@ describe("App — 첫 미션 전체 흐름 (air-sealed-01)", () => {
 
     await user.click(screen.getByRole("radio", { name: /같은 공기가 더 작은 공간에 모인다/ }));
     expect(screen.getByText("판단이 관찰과 일치해요")).toBeInTheDocument();
+    expect(screen.queryByText(/처음 판단을 관찰 근거로 수정했어요/)).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /기록으로/ }));
+    expect(screen.getByRole("heading", { name: /검토판/ })).toBeInTheDocument();
+    expect(screen.queryByText(/처음 판단을 관찰 근거로 수정했어요/)).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /실험 기록 보기/ }));
 
     expect(screen.getByRole("heading", { name: /미션 1 기록/ })).toBeInTheDocument();

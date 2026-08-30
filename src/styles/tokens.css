@@ -1,21 +1,37 @@
 :root {
-  --color-bg: #f5f8ff;
+  --color-bg: #f7f5ef;
   --color-surface: #ffffff;
-  --color-ink: #1e2a3a;
-  --color-ink-soft: #48586e;
-  --color-primary: #1d4ed8;
+  --color-surface-soft: #f1f3ee;
+  --color-surface-blue: #edf3ff;
+  --color-ink: #17233c;
+  --color-ink-soft: #536074;
+  --color-ink-faint: #687386;
+  --color-primary: #2457c5;
+  --color-primary-hover: #1b429a;
   --color-primary-ink: #ffffff;
-  --color-accent: #f59e0b;
-  --color-focus: #1e3a8a;
-  --color-success: #166534;
-  --color-success-bg: #ecfdf5;
-  --color-warn: #92400e;
-  --color-warn-bg: #fffbeb;
-  --color-border: #c7d2e5;
-  --radius: 12px;
+  --color-accent: #e6a33c;
+  --color-accent-ink: #4a2d08;
+  --color-focus: #153c8f;
+  --color-focus-soft: #dbe7ff;
+  --color-success: #147d75;
+  --color-success-bg: #e8f5f1;
+  --color-warn: #8b4d11;
+  --color-warn-bg: #fff3dc;
+  --color-danger: #b4473f;
+  --color-border: #d7d9d4;
+  --color-border-strong: #aeb5b5;
+  --color-grid: rgba(36, 87, 197, 0.06);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 2px 8px rgba(23, 35, 60, 0.06);
+  --shadow-md: 0 12px 28px rgba(23, 35, 60, 0.09);
+  --shadow-focus: 0 0 0 4px var(--color-focus-soft);
   --font-size-base: 17px;
   --line-height: 1.65;
   --touch-target: 44px;
+  --content-max: 1120px;
 }
 
 * {
@@ -24,12 +40,32 @@
 
 html {
   background: var(--color-bg);
+  color-scheme: light;
+  scroll-behavior: smooth;
 }
 
 body {
+  min-width: 320px;
   margin: 0;
+  overflow-x: hidden;
+  background: var(--color-bg);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
   font-size: var(--font-size-base);
   line-height: var(--line-height);
   color: var(--color-ink);
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+label,
+summary {
+  -webkit-tap-highlight-color: transparent;
 }

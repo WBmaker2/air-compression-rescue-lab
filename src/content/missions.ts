@@ -73,7 +73,7 @@ const missions: readonly AirMission[] = [
     title: "밀폐 주사기 60 → 40",
     scene:
       "끝이 막힌 가상 주사기 모형에 모형 공기 표식 12개가 모형 부피 60에 들어 있습니다. 입구가 막혀 있어 공기가 밖으로 나갈 수 없습니다.",
-    task: "피스톤를 60에서 40으로 누르기 전과 후, 모형 공기 표식은 어떻게 될지 먼저 예측해 보세요.",
+    task: "피스톤을 60에서 40으로 누르기 전과 후, 모형 공기 표식은 어떻게 될지 먼저 예측해 보세요.",
     states: [sealed60, sealed40],
     transitions: [
       {
@@ -116,7 +116,7 @@ const missions: readonly AirMission[] = [
     id: "air-open-03",
     title: "열린 주사기 60 → 20",
     scene:
-      "이번 주사기 모형의 끝은 열려 있습니다. 모형 부피 60에 표식 12개가 있을 때 피스톤를 20까지 밀면 표식 일부가 출구로 나갑니다.",
+      "이번 주사기 모형의 끝은 열려 있습니다. 모형 부피 60에 표식 12개가 있을 때 피스톤을 20까지 밀면 표식 일부가 출구로 나갑니다.",
     task: "밀폐 주사기와 비교해 열린 주사기에서 무엇이 다른지 예측해 보세요.",
     states: [open60, open20],
     transitions: [
@@ -221,6 +221,7 @@ export const OBSERVATION_LABELS: Readonly<Record<string, string>> = {
   "obs.resistance-unchanged": "저항 느낌 라벨이 그대로였다",
   "obs.resistance-rising": "나중 관찰에서 저항 느낌이 커졌다",
   "obs.signature.leaking": "표식 수가 12→10→8로 줄어드는 누출 signature가 나타났다",
+  "obs.not-enough-information": "결과 상태와 누출 정보가 부족해 확정할 수 없다",
 };
 
 export const DECISION_LABELS: Readonly<Record<string, string>> = {

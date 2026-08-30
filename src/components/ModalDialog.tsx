@@ -44,11 +44,11 @@ export function ModalDialog({ open, title, onClose, children }: ModalDialogProps
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-labelledby="modal-title"
         className="modal-dialog"
       >
         <div className="modal-header">
-          <h2>{title}</h2>
+          <h2 id="modal-title">{title}</h2>
           <button ref={closeRef} type="button" className="modal-close" onClick={onClose}>
             닫기
           </button>

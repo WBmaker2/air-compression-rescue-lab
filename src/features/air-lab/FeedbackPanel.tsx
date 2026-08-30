@@ -1,4 +1,8 @@
-import { OBSERVATION_LABELS, DECISION_LABELS } from "../../content/missions";
+import {
+  labelForDecision,
+  labelForEvidence,
+  labelForObservation,
+} from "../../content/labels";
 import type { AirEvaluation } from "../../domain/types";
 
 interface FeedbackPanelProps {
@@ -22,9 +26,14 @@ export function FeedbackPanel({
       className={accepted ? "feedback accepted" : "feedback revise"}
       aria-live="polite"
     >
-      <h3>{accepted ? "판단이 관찰과 일치해요" : "관찰 근거를 다시 확인해 볼까요?"}</h3>
-      <p>
-        네가 고른 판단: <strong>{DECISION_LABELS[decision] ?? decision}</strong>
+      <div className="feedback-heading">
+        <span className="feedback-status" aria-hidden="true">
+          {accepted ? "맞음" : "다시 보기"}
+        </span>
+        <h3>{accepted ? "판단이 관찰과 일치해요" : "관찰 근거를 다시 확인해 볼까요?"}</h3>
+      </div>
+      <p className="feedback-choice">
+        네가 고른 판단: <strong>{labelForDecision(decision)}</strong>
       </p>
       {revised ? <p>처음 판단을 관찰 근거로 수정했어요. 수정도 좋은 과학 태도예요.</p> : null}
       {observationKeys.length > 0 ? (
@@ -32,7 +41,7 @@ export function FeedbackPanel({
           <h4>관찰 결과</h4>
           <ul>
             {observationKeys.map((key) => (
-              <li key={key}>{OBSERVATION_LABELS[key] ?? key}</li>
+              <li key={key}>{labelForObservation(key)}</li>
             ))}
           </ul>
         </>
@@ -42,7 +51,7 @@ export function FeedbackPanel({
           <h4>함께 볼 근거</h4>
           <ul>
             {evidenceKeys.map((key) => (
-              <li key={key}>{OBSERVATION_LABELS[key.replace("evidence.", "obs.")] ?? key}</li>
+              <li key={key}>{labelForEvidence(key)}</li>
             ))}
           </ul>
         </>

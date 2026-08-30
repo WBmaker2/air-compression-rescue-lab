@@ -23,9 +23,20 @@ export function ProgressSteps({ current, missionIndex, missionCount }: ProgressS
   const visible = STEP_ORDER.filter((step) => step !== "INTRO");
   return (
     <nav aria-label="학습 진행 상태" className="progress-steps">
-      <p className="progress-mission">
-        미션 {missionIndex + 1} / {missionCount}
-      </p>
+      <div className="progress-topline">
+        <p className="progress-mission">
+          <span className="progress-mission-label">탐구 미션</span>
+          <strong>
+            {missionIndex + 1} / {missionCount}
+          </strong>
+        </p>
+        <span className="progress-stage">
+          {currentIndex} / {visible.length} 단계
+        </span>
+      </div>
+      <div className="progress-track" aria-hidden="true">
+        <span style={{ transform: `scaleX(${Math.max(0, currentIndex / visible.length)})` }} />
+      </div>
       <ol>
         {visible.map((step) => {
           const index = STEP_ORDER.indexOf(step);
@@ -38,8 +49,13 @@ export function ProgressSteps({ current, missionIndex, missionCount }: ProgressS
               className={index === currentIndex ? "progress-step current" : "progress-step"}
               data-state={state}
             >
-              <span className="visually-hidden">{state} 단계: </span>
-              {STEP_LABELS[step]}
+              <span className="progress-number" aria-hidden="true">
+                {String(index).padStart(2, "0")}
+              </span>
+              <span>
+                <span className="visually-hidden">{state} 단계: </span>
+                {STEP_LABELS[step]}
+              </span>
             </li>
           );
         })}
