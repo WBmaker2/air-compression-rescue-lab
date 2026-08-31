@@ -57,7 +57,7 @@ export function FeedbackPanel({
         </>
       ) : null}
       <p className="feedback-limit">
-        이 판정은 검수된 가상 모형의 결과예요. 실제 세계 전체를 보장하지 않아요.
+        이 결과는 이 활동의 가상 모형에서만 확인한 내용이에요. 실제 공기에서 언제나 같다는 뜻은 아니에요.
       </p>
     </div>
   );

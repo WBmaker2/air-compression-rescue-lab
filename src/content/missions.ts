@@ -95,7 +95,7 @@ const missions: readonly AirMission[] = [
     title: "밀폐 주사기 40 → 20",
     scene:
       "같은 밀폐 주사기 모형입니다. 이번에는 모형 부피 40에서 한 번 더 20까지 누릅니다. 간격이 이미 좁아진 표식 12개가 더 좁은 공간으로 모입니다.",
-    task: "두 번째로 누를 때 표식의 간격과 저항 느낌이 어떻게 바뀔지 예측해 보세요.",
+    task: "두 번째로 누를 때 표식의 간격과 누르기 어려운 정도가 어떻게 바뀔지 예측해 보세요.",
     states: [sealed40, sealed20],
     transitions: [
       {
@@ -110,7 +110,7 @@ const missions: readonly AirMission[] = [
     sourceNote: "초등 과학 5~6학년 '공기는 공간을 차지한다' 단원의 가상 압축 모형 (2026-08-28 검수)",
     reviewStatus: "approved",
     misconceptionGuard:
-      "간격이 좁아질수록 저항 느낌 라벨이 커집니다. 이는 질적 모형 표현이며 실제 압력 수치가 아닙니다.",
+      "간격이 좁아질수록 누르기 어려운 정도가 커집니다. 이는 질적 모형 표현이며 실제 압력 수치가 아닙니다.",
   },
   {
     id: "air-open-03",
@@ -170,7 +170,7 @@ const missions: readonly AirMission[] = [
     id: "air-leak-05",
     title: "마개가 느슨한 주사기",
     scene:
-      "마개가 느슨한 주사기 모형입니다. 누출률이나 결과 상태 정보가 제공되지 않아 누르기 결과를 확정할 수 없습니다.",
+      "마개가 느슨해 공기가 샐 수 있는 주사기 모형입니다. 하지만 얼마나 새는지, 누른 뒤 표식이 어떻게 바뀌는지는 알려지지 않았습니다.",
     task: "이 주사기를 누르면 어떻게 될까요? 확실하지 않다면 판단을 보류하는 것도 정식 답입니다.",
     states: [leaking60],
     transitions: [],
@@ -178,13 +178,13 @@ const missions: readonly AirMission[] = [
     sourceNote: "초등 과학 5~6학년 판단 보류 훈련용 가상 모형 (2026-08-28 검수)",
     reviewStatus: "approved",
     misconceptionGuard:
-      "누출 여부를 모르면 압축만으로 결과를 확정하지 않습니다. 정보가 부족하면 '판단 보류'를 고르세요.",
+      "누출량과 누른 뒤 결과를 모르면 압축만으로 결과를 확정하지 않습니다. 정보가 부족하면 '판단 보류'를 고르세요.",
   },
   {
     id: "air-diagnose-06",
     title: "가상 펌프 진단",
     scene:
-      "가상 펌프의 세 번의 관찰 기록입니다. 관찰 1: 모형 부피 60, 표식 12개, 저항 low. 관찰 2: 모형 부피 40, 표식 10개, 저항 low. 관찰 3: 모형 부피 20, 표식 8개, 저항 medium.",
+      "가상 펌프의 세 번의 관찰 기록입니다. 관찰 1: 모형 부피 60, 표식 12개, 저항 낮음. 관찰 2: 모형 부피 40, 표식 10개, 저항 낮음. 관찰 3: 모형 부피 20, 표식 8개, 저항 중간.",
     task: "이 펌프는 밀폐, 열림, 누출 중 어느 상태일까요? 관찰 근거와 함께 진단하세요.",
     states: [sealed60, open20],
     transitions: [],
@@ -199,7 +199,7 @@ const missions: readonly AirMission[] = [
     sourceNote: "초등 과학 5~6학년 관찰 signature 진단 활동 (2026-08-28 검수)",
     reviewStatus: "approved",
     misconceptionGuard:
-      "표식이 12→10→8로 줄어드는 것은 누출 signature입니다. 밀폐라면 표식 수가 보존되어야 합니다.",
+      "표식이 12→10→8로 줄어드는 것은 누출 무늬예요. 밀폐라면 표식 수가 그대로여야 해요.",
   },
 ];
 
@@ -216,12 +216,12 @@ export const OBSERVATION_LABELS: Readonly<Record<string, string>> = {
   "obs.spacing-decreased": "표식 사이 간격이 좁아졌다",
   "obs.spacing-increased": "표식 사이 간격이 넓어졌다",
   "obs.spacing-unchanged": "남은 표식의 간격은 그대로였다",
-  "obs.resistance-increased": "저항 느낌 라벨이 커졌다",
-  "obs.resistance-decreased": "저항 느낌 라벨이 작아졌다",
-  "obs.resistance-unchanged": "저항 느낌 라벨이 그대로였다",
-  "obs.resistance-rising": "나중 관찰에서 저항 느낌이 커졌다",
-  "obs.signature.leaking": "표식 수가 12→10→8로 줄어드는 누출 signature가 나타났다",
-  "obs.not-enough-information": "결과 상태와 누출 정보가 부족해 확정할 수 없다",
+  "obs.resistance-increased": "누르기 어려운 정도가 커졌다",
+  "obs.resistance-decreased": "누르기 어려운 정도가 작아졌다",
+  "obs.resistance-unchanged": "누르기 어려운 정도가 그대로였다",
+  "obs.resistance-rising": "나중 관찰에서 누르기 어려운 정도가 커졌다",
+  "obs.signature.leaking": "표식 수가 12→10→8로 줄어드는 누출 무늬가 나타났다",
+  "obs.not-enough-information": "누출량과 누른 뒤 변화 정보가 부족해 확정할 수 없다",
 };
 
 export const DECISION_LABELS: Readonly<Record<string, string>> = {

@@ -142,12 +142,66 @@ describe("App — 판단 보류 미션 (air-leak-05)", () => {
     }
 
     // 미션 5: 누출 — 근거를 확인할 관찰 기록이 제공되지 않는다
-    expect(screen.getByText(/확정할 수 없습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/얼마나 새는지.*알려지지 않았습니다/)).toBeInTheDocument();
     await beginObservation(user);
     await user.click(screen.getByRole("radio", { name: /정보가 부족해 판단을 보류한다/ }));
     await user.click(screen.getByRole("button", { name: /실행 준비/ }));
     await user.click(screen.getByRole("button", { name: /관찰 결과 확인/ }));
     expect(screen.getByRole("button", { name: /진단하기/ })).toBeDisabled();
     expect(screen.getByText(/판단을 보류하는 것/)).toBeInTheDocument();
+  });
+});
+
+describe("App — 관찰 기록 진단 미션 (air-diagnose-06)", () => {
+  it("누출 진단 피드백에 실제 12→10→8 관찰 근거를 보여 준다", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const answers = [
+      /같은 공기가 더 작은 공간에 모인다/,
+      /같은 공기가 더 작은 공간에 모인다/,
+      /빠져나감/,
+      /공간이 커지고 간격이 넓어진다/,
+    ];
+
+    for (const [index, answer] of answers.entries()) {
+      if (index === 0) await startStepOnly(user);
+      await beginObservation(user);
+      await user.click(screen.getByRole("radio", { name: answer }));
+      await user.click(screen.getByRole("button", { name: /실행 준비/ }));
+      await user.click(screen.getByRole("button", { name: /가상 실험 실행|관찰 결과 확인/ }));
+      await user.click(screen.getAllByRole("checkbox")[0]);
+      await user.click(screen.getByRole("button", { name: /진단하기/ }));
+      await user.click(screen.getByRole("radio", { name: answer }));
+      await user.click(screen.getByRole("button", { name: /기록으로/ }));
+      await user.click(screen.getByRole("button", { name: /실험 기록 보기/ }));
+      await user.click(screen.getByRole("button", { name: /다음 미션으로/ }));
+    }
+
+    await beginObservation(user);
+    await user.click(screen.getByRole("radio", { name: /정보가 부족해 판단을 보류한다/ }));
+    await user.click(screen.getByRole("button", { name: /실행 준비/ }));
+    await user.click(screen.getByRole("button", { name: /관찰 결과 확인/ }));
+    await user.click(screen.getByRole("checkbox", { name: /누출량과 누른 뒤 변화 정보/ }));
+    await user.click(screen.getByRole("button", { name: /진단하기/ }));
+    await user.click(screen.getByRole("radio", { name: /정보가 부족해 판단을 보류한다/ }));
+    await user.click(screen.getByRole("button", { name: /기록으로/ }));
+    await user.click(screen.getByRole("button", { name: /실험 기록 보기/ }));
+    await user.click(screen.getByRole("button", { name: /다음 미션으로/ }));
+
+    expect(screen.getByText(/관찰 1: 모형 부피 60.*저항 낮음/)).toBeInTheDocument();
+    expect(screen.getByText(/관찰 3: 모형 부피 20.*저항 중간/)).toBeInTheDocument();
+    await beginObservation(user);
+    expect(screen.getByText("관찰 기록을 보기 전, 어떤 결과를 먼저 예상하나요?")).toBeInTheDocument();
+    await user.click(screen.getByRole("radio", { name: /같은 공기가 더 작은 공간에 모인다/ }));
+    await user.click(screen.getByRole("button", { name: /실행 준비/ }));
+    await user.click(screen.getByRole("button", { name: /관찰 결과 확인/ }));
+
+    await user.click(screen.getByRole("checkbox", { name: /표식 수가 12→10→8로 줄어드는 누출 무늬/ }));
+    await user.click(screen.getByRole("button", { name: /진단하기/ }));
+    await user.click(screen.getByRole("radio", { name: /누출 — 조금씩 새어 나간다/ }));
+
+    expect(screen.getByText("판단이 관찰과 일치해요")).toBeInTheDocument();
+    expect(screen.getByText("표식 수가 12→10→8로 줄어드는 누출 무늬가 나타났다")).toBeInTheDocument();
+    expect(screen.queryByText(/누출량과 누른 뒤 변화 정보가 부족해 확정할 수 없다/)).not.toBeInTheDocument();
   });
 });

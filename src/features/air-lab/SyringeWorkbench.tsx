@@ -58,8 +58,8 @@ export function SyringeWorkbench({
   const fromState = mission.states[0];
   const observationKeys = useMemo(() => {
     if (runResult && runResult !== "no-run") return runResult.evaluation.observationKeys;
-    if (runResult === "no-run") return ["obs.not-enough-information"];
     if (isDiagnoseMission) return mission.observationSignatures?.[0]?.observationKeys ?? [];
+    if (runResult === "no-run") return ["obs.not-enough-information"];
     return [];
   }, [runResult, isDiagnoseMission, mission.observationSignatures]);
 
@@ -125,7 +125,11 @@ export function SyringeWorkbench({
         <StepHeader eyebrow="두 번째 기록 · 실행 전" title="예측판 — 먼저 생각해 보기" headingRef={headingRef} onBack={back} />
         <p className="step-lede">{mission.task}</p>
         <fieldset className="choice-list">
-          <legend>피스톤을 움직인 뒤 어떤 일이 일어날 것 같나요?</legend>
+          <legend>
+            {isDiagnoseMission
+              ? "관찰 기록을 보기 전, 어떤 결과를 먼저 예상하나요?"
+              : "피스톤을 움직인 뒤 어떤 일이 일어날 것 같나요?"}
+          </legend>
           {PREDICTION_OPTIONS.map((option) => (
             <label key={option} className="choice">
               <input
@@ -173,7 +177,7 @@ export function SyringeWorkbench({
                 확정된 결과 상태가 제공되지 않아요. 실행 결과를 만들어 내지 않고, 관찰 기록을 확인하는 것으로 넘어가요.
               </p>
             )}
-            <p className="model-note">실제 주사기를 움직이는 안내가 아니라, 검수된 가상 모형의 전이만 보여 줍니다.</p>
+            <p className="model-note">실제 주사기를 움직이는 안내가 아니라, 이 활동의 가상 모형 변화를 보여 줍니다.</p>
           </div>
         </div>
         <div className="step-actions">
@@ -240,7 +244,7 @@ export function SyringeWorkbench({
                     <td>{labelForLevel(after?.spacingLevel ?? "medium")}</td>
                   </tr>
                   <tr>
-                    <th scope="row">저항 느낌</th>
+                    <th scope="row">누르기 어려운 정도</th>
                     <td>{labelForLevel(before.resistanceFeel)}</td>
                     <td>{labelForLevel(after?.resistanceFeel ?? "medium")}</td>
                   </tr>
@@ -262,7 +266,7 @@ export function SyringeWorkbench({
                 <th scope="col">관찰</th>
                 <th scope="col">모형 부피</th>
                 <th scope="col">공기 표식</th>
-                <th scope="col">저항 느낌</th>
+                <th scope="col">누르기 어려운 정도</th>
               </tr>
             </thead>
             <tbody>
@@ -278,7 +282,7 @@ export function SyringeWorkbench({
           </table>
         ) : (
           <p className="empty-state">
-            확정된 실행 결과가 없어요. 누출률과 결과 상태 정보가 제공되지 않았기 때문에 판단을 보류하는 것이 과학적인 태도예요.
+            확정된 실행 결과가 없어요. 누출량과 누른 뒤 변화 정보가 없어서 판단을 보류하는 것이 과학적인 태도예요.
           </p>
         )}
 

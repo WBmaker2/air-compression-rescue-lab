@@ -65,7 +65,7 @@ export function EntranceScreen({ dispatch, headingRef }: EntranceScreenProps) {
         </li>
         <li className="fact-card">
           <span className="fact-label">미션</span>
-          <strong>검수된 6개</strong>
+          <strong>6개 미션</strong>
           <span>밀폐·열림·누출·진단</span>
         </li>
         <li className="fact-card">

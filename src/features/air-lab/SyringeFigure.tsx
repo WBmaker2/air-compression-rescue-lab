@@ -60,7 +60,7 @@ export function SyringeFigure({ state, label }: SyringeFigureProps) {
         viewBox="0 0 380 200"
         width="100%"
         role="img"
-        aria-label={`${label}: 모형 부피 ${state.modelVolume}, 모형 공기 표식 ${state.airMarkerCount}개, 간격 ${spacingLabel}, 저항 느낌 ${resistanceLabel}, 끝 상태 ${sealLabel}`}
+        aria-label={`${label}: 모형 부피 ${state.modelVolume}, 모형 공기 표식 ${state.airMarkerCount}개, 간격 ${spacingLabel}, 누르기 어려운 정도 ${resistanceLabel}, 끝 상태 ${sealLabel}`}
       >
         <rect
           x={BARREL_X}
@@ -136,7 +136,7 @@ export function SyringeFigure({ state, label }: SyringeFigureProps) {
       </svg>
       <figcaption>
         모형 부피 {state.modelVolume} · 모형 공기 표식 {state.airMarkerCount}개 · 간격 {spacingLabel} ·
-        저항 느낌 {resistanceLabel} · {sealLabel}
+        누르기 어려운 정도 {resistanceLabel} · {sealLabel}
       </figcaption>
     </figure>
   );

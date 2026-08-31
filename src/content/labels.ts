@@ -31,7 +31,7 @@ export function labelForEvidence(key: string): string {
     "evidence.escaped.markers-left-through-opening":
       "표식 일부가 열린 출구로 나갔어요",
     "evidence.unknown.not-enough-information":
-      "결과 상태와 누출 정보가 부족해요",
+      "누출량과 누른 뒤 변화 정보가 부족해요",
     "evidence.diagnosis.signature-match":
       "표식 수가 12→10→8로 줄어드는 누출 무늬와 맞아요",
     "evidence.diagnosis.signature-mismatch":
@@ -56,8 +56,8 @@ export function labelForComparison(key: string): string {
   }
   if (key === "compare.spacing-narrower") return "표식 사이 간격이 좁아졌어요";
   if (key === "compare.spacing-wider") return "표식 사이 간격이 넓어졌어요";
-  if (key === "compare.resistance-higher") return "저항 느낌이 커졌어요";
-  if (key === "compare.resistance-lower") return "저항 느낌이 작아졌어요";
+  if (key === "compare.resistance-higher") return "누르기 어려운 정도가 커졌어요";
+  if (key === "compare.resistance-lower") return "누르기 어려운 정도가 작아졌어요";
   return "눈에 띄는 변화가 없어요";
 }
 

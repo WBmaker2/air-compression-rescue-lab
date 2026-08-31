@@ -79,7 +79,7 @@ export function LearningReport({ records, headingRef, onRestartRequest }: Learni
         </ActionButton>
       </div>
       <p className="feedback-limit">
-        이 기록은 검수된 가상 모형에 대한 활동이며 실제 기기 실험 결과나 점수가 아니에요.
+        이 기록은 이 활동의 가상 모형에 대한 기록이며 실제 기기 실험 결과나 점수가 아니에요.
       </p>
     </section>
   );
