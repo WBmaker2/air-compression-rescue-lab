@@ -71,3 +71,18 @@
 | HVC | 기존 등록 유지, 이번 리디자인 릴리스에서 등록 데이터 수정 없음 |
 
 첫 리디자인 커밋의 CI는 Playwright 브라우저 미설치로 실패했으며, `e56b998`에서 워크플로를 보완한 뒤 최종 CI가 성공했습니다. Pages 배포는 최종 커밋 기준 성공했습니다.
+
+## 8. 학습자 UX 후속 개선 릴리스 (2026-08-31)
+
+| 항목 | 결과 |
+|---|---|
+| 개선 커밋 | [`44017cf`](https://github.com/WBmaker2/air-compression-rescue-lab/commit/44017cfb98e3b77cf158ad0099fedf16957d5449) — 미션 5·6 학습 문구와 관찰 피드백 정합성 개선 |
+| CI | [`33369611830`](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33369611830) — 성공, `npm run verify` 전체 통과 |
+| Pages build/deploy | [`33369611837`](https://github.com/WBmaker2/air-compression-rescue-lab/actions/runs/33369611837) — build·deploy 성공 |
+| 공개 주소 | [https://wbmaker2.github.io/air-compression-rescue-lab/](https://wbmaker2.github.io/air-compression-rescue-lab/) |
+| 공개 기본 확인 | HTTP 200, 제목 `공기 부피 압축 연구소`, 해시 JS/CSS 자산 응답, 375px 시작 CTA 첫 viewport 노출 |
+| 공개 learner path | 6개 미션을 거쳐 미션 6 누출 진단 완료. 12→10→8 누출 무늬가 피드백 관찰 결과에 표시되고 정보 부족 문구는 표시되지 않음 |
+| 공개 375px 레이아웃 | PASS — `documentScrollWidth=360`, `innerWidth=375`, viewport 기준 overflow 0 |
+| HVC | 기존 등록 유지 — [HVC 앱 주소](https://www.vibehong.shop/apps/air-compression-rescue-lab-7cdc3225-e941-4b39-bb38-29e828ed77f0) |
+
+로컬 브라우저의 Chromium 시작 오류와 달리 GitHub Actions Ubuntu runner에서는 Playwright 설치 후 `npm run verify`가 성공했습니다. VoiceOver 수동 검증은 기존 계획대로 제외했습니다.
